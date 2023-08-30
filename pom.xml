@@ -32,18 +32,16 @@
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <!-- Use a valid version of Spring Framework here -->
-            <version>6.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <!-- Use a valid version of Spring Framework here -->
-            <version>6.0.3</version>
-        </dependency>
+         <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <version>5.3.10</version>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>5.3.10</version>
+    </dependency>
     </dependencies>
     <build>
         <finalName>ROOT</finalName>
