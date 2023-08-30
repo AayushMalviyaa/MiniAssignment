@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    tools {
+       
+        maven "M2_HOME"
+    }
+
+    stages {
+        stage('Checkout code'){
+             steps {
+               
+              git branch: 'main', url: 'https://github.com/Rishabh-Patel-git/CalculatorMvn.git'
+  
+            }
+
+        }
+        stage('Build') {
+            steps {
+
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+ 
+            }
+
+           
+        }
+         stage('docker image'){
+             steps{
+                  checkout scm
+                  sh "docker --version"
+                  sh "docker build -t calcy:${BUILD_NUMBER} ."
+                  sh "docker run -itd -p 8888:8080 calcy:${BUILD_NUMBER}"
+             }
+         
+         }
+      
+    }
+}

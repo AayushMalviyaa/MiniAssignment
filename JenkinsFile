@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+
+    tools {
+       
+        maven "M2_HOME"
+    }
+
+    stages {
+        stage('Checkout code'){
+             steps {
+               
+              git branch: 'main', url: 'https://github.com/Rishabh-Patel-git/CalculatorMvn.git'
+  
+            }
+
+        }
+        stage('Build') {
+            steps {
+
+                sh "mvn -Dmaven.test.failure.ignore=true clean install"
+ 
+            }
+
+           
+        }
+        stage('Test'){
+             steps {
+
+                sh "mvn test"
+ 
+            }
+             post {
+               
+                success {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                   
+                }
+            }
+        }
+        stage('Sonar Quality check'){
+         steps {
+                withSonarQubeEnv('sonar_centos') {
+                    sh "mvn sonar:sonar"}
+ 
+            }
+        }
+        stage('Artifactory'){
+            steps{
+            
+            rtUpload (
+                serverId: 'windows_jfrog',
+                spec: '''{
+                      "files": [
+                        {
+                          "pattern": "*.war",
+                          "target": "jenkins_pipeline"
+                        }
+                     ]
+                }''',
+            )
+            }
+        
+        }
+      
+    }
+}
+
