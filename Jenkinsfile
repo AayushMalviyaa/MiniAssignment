@@ -20,16 +20,17 @@ pipeline {
             }
         }
         
-        stage('Test') {
-            steps {
-                sh "mvn test"
-            }
-            post {
-                success {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
+       stage('Test') {
+    steps {
+        sh "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent test"
+    }
+    post {
+        success {
+            junit 'target/surefire-reports/*.xml'
         }
+    }
+}
+
 
         stage('Sonar Analysis') {
             steps {
