@@ -35,7 +35,7 @@ parameters {
         steps{
             junit"Calculator/target/surfire-report/*.xml"
             jococo()
-            withSonarQubeEnv('server-sonar') {
+            withSonarQubeEnv('sonarqube-9.4') {
                 sh "mvn -f pom.xml clean install sonar:sonar"
             }
         }   
