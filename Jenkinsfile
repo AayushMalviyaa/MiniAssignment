@@ -1,19 +1,18 @@
 pipeline {
     agent any
- environment {
+    environment {
         DOCKER_HUB_CREDENTIALS = credentials('97c36c51-b00f-4bd1-911b-3143b0f3b00d')
     }
     tools {
         maven "maven.3.2.5"
     }
-parameters {
+    parameters {
         choice(
             choices: ['Dev', 'Prod'],
             description: 'Select the environment',
             name: 'Environment'
         )
     }
-    //
     stages {
         stage("Maven Build") {
             steps {
@@ -31,15 +30,7 @@ parameters {
                 }
             }
         }
-    //      stage('SonarQube analysis') {
-    //     steps{
-    //         junit"Calculator/target/surfire-report/*.xml"
-    //         jococo()
-    //         withSonarQubeEnv('sonarqube-9.4') {
-    //             sh "mvn -f pom.xml clean install sonar:sonar"
-    //         }
-    //     }   
-    // }    
+
         stage('Sonar Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube-9.4') {
@@ -47,22 +38,24 @@ parameters {
                 }
             }
         }
-         stage("Pushing Artifacts"){
-            steps{
+        
+        stage("Pushing Artifacts") {
+            steps {
                 rtUpload (
-                serverId: 'arti',
-                spec: '''{
-                "files": [
-                    {
-                    "pattern": "*.jar",
-                    "target": "Main/"
-                    }
-                ]
-                }''',
+                    serverId: 'arti',
+                    spec: '''{
+                        "files": [
+                            {
+                                "pattern": "*.jar",
+                                "target": "Main/"
+                            }
+                        ]
+                    }''',
                 )
             }
         }
-         stage('Build Docker Image') {
+
+        stage('Build Docker Image') {
             steps {
                 script {
                     // Build the Docker image
@@ -70,50 +63,44 @@ parameters {
                 }
             }
         }
-         stage('Push Docker Image') {
-             when{
-                 branch 'Dev'
-             }
-    steps {
-        script {
-            // Push the Docker image to Docker Hub
-            docker.withRegistry('https://registry.hub.docker.com', '97c36c51-b00f-4bd1-911b-3143b0f3b00d') {
-                docker.image("aayushmalviya/calculator-app:${env.BUILD_ID}").push()
+
+        stage('Push Docker Image') {
+            when {
+                branch 'Dev'
+            }
+            steps {
+                script {
+                    // Push the Docker image to Docker Hub
+                    docker.withRegistry('https://registry.hub.docker.com', '97c36c51-b00f-4bd1-911b-3143b0f3b00d') {
+                        docker.image("aayushmalviya/calculator-app:${env.BUILD_ID}").push()
+                    }
+                }
             }
         }
-    }
-}
-       
-     
-         stage('Run the container') {
-    steps {
-        script {
-            def docker_container = sh(returnStdout: true, script: 'docker ps -a -f name="MiniAssignment" -q').trim()
-            
-            if (docker_container) {
-                sh "docker stop ${docker_container}"
-                sh "docker rm --force ${docker_container}"
+        
+        stage('Run the container') {
+            steps {
+                script {
+                    def docker_container = sh(returnStdout: true, script: 'docker ps -a -f name="MiniAssignment" -q').trim()
+                    
+                    if (docker_container) {
+                        sh "docker stop ${docker_container}"
+                        sh "docker rm --force ${docker_container}"
+                    }
+                    
+                    def port = params.Environment == 'Dev' ? '8084' : '8085'
+                    sh "docker run -d --name MiniAssignment -p ${port}:8080 aayushmalviya/calculator-app:${env.BUILD_ID}"
+                }
             }
-            
-            def port = params.Environment == 'Dev' ? '8084' : '8085'
-            sh "docker run -d --name MiniAssignment -p ${port}:8080 aayushmalviya/calculator-app:${env.BUILD_ID}"
         }
-    }
-}
+
         stage('Email Notification') {
-    steps {
-        emailext body: 'Deployment completed successfully.',
-                 recipientProviders: [[$class: 'CulpritsRecipientProvider']],
-                 subject: 'Deployment Status',
-                 to: 'aayush.malviya@nagarro.com' // Replace with the recipient's email address
-    }
-}
-
-       
-    
-
-
-        
-        
+            steps {
+                emailext body: 'Deployment completed successfully.',
+                         recipientProviders: [[$class: 'CulpritsRecipientProvider']],
+                         subject: 'Deployment Status',
+                         to: 'aayush.malviya@nagarro.com' // Replace with the recipient's email address
+            }
+        }
     }
 }
