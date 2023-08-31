@@ -31,14 +31,22 @@ parameters {
                 }
             }
         }
-        
-        stage('Sonar Analysis') {
-            steps {
-                withSonarQubeEnv('sonarqube-9.4') {
-                    sh 'mvn sonar:sonar'
-                }
+         stage('SonarQube analysis') {
+        steps{
+            junit"Calculator/target/surfire-report/*.xml"
+            jococo()
+            withSonarQubeEnv('sonarqube-9.4') {
+                sh "mvn -f pom.xml clean install sonar:sonar"
             }
-        }
+        }   
+    }    
+        // stage('Sonar Analysis') {
+        //     steps {
+        //         withSonarQubeEnv('sonarqube-9.4') {
+        //             sh 'mvn sonar:sonar'
+        //         }
+        //     }
+        // }
          stage("Pushing Artifacts"){
             steps{
                 rtUpload (
