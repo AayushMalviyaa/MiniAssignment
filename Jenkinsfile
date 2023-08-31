@@ -47,7 +47,7 @@ parameters {
         //             sh 'mvn sonar:sonar'
         //         }
         //     }
-        // }
+        //}
          stage("Pushing Artifacts"){
             steps{
                 rtUpload (
