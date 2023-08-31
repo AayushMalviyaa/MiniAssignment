@@ -47,7 +47,7 @@ pipeline {
                     spec: '''{
                         "files": [
                             {
-                                "pattern": "*.jar",
+                                "pattern": "*.war",
                                 "target": "Main/"
                             }
                         ]
