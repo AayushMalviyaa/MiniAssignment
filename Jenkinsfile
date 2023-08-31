@@ -1,18 +1,19 @@
 pipeline {
     agent any
-    environment {
+ environment {
         DOCKER_HUB_CREDENTIALS = credentials('97c36c51-b00f-4bd1-911b-3143b0f3b00d')
     }
     tools {
         maven "maven.3.2.5"
     }
-    parameters {
+parameters {
         choice(
             choices: ['Dev', 'Prod'],
             description: 'Select the environment',
             name: 'Environment'
         )
     }
+    //
     stages {
         stage("Maven Build") {
             steps {
@@ -20,18 +21,17 @@ pipeline {
             }
         }
         
-       stage('Test') {
-    steps {
-        sh "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent test"
-    }
-    post {
-        success {
-            junit 'target/surefire-reports/*.xml'
+        stage('Test') {
+            steps {
+                sh "mvn test"
+            }
+            post {
+                success {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
         }
-    }
-}
-
-
+        
         stage('Sonar Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube-9.4') {
@@ -39,24 +39,22 @@ pipeline {
                 }
             }
         }
-        
-        stage("Pushing Artifacts") {
-            steps {
+         stage("Pushing Artifacts"){
+            steps{
                 rtUpload (
-                    serverId: 'arti',
-                    spec: '''{
-                        "files": [
-                            {
-                                "pattern": "*.war",
-                                "target": "Main/"
-                            }
-                        ]
-                    }''',
+                serverId: 'arti',
+                spec: '''{
+                "files": [
+                    {
+                    "pattern": "*.jar",
+                    "target": "Main/"
+                    }
+                ]
+                }''',
                 )
             }
         }
-
-        stage('Build Docker Image') {
+         stage('Build Docker Image') {
             steps {
                 script {
                     // Build the Docker image
@@ -64,44 +62,46 @@ pipeline {
                 }
             }
         }
-
-        stage('Push Docker Image') {
-            when {
-                branch 'Dev'
+       
+     
+         stage('Run the container') {
+    steps {
+        script {
+            def docker_container = sh(returnStdout: true, script: 'docker ps -a -f name="MiniAssignment" -q').trim()
+            
+            if (docker_container) {
+                sh "docker stop ${docker_container}"
+                sh "docker rm --force ${docker_container}"
             }
-            steps {
-                script {
-                    // Push the Docker image to Docker Hub
-                    docker.withRegistry('https://registry.hub.docker.com', '97c36c51-b00f-4bd1-911b-3143b0f3b00d') {
-                        docker.image("aayushmalviya/calculator-app:${env.BUILD_ID}").push()
-                    }
-                }
-            }
+            
+            def port = params.Environment == 'Dev' ? '8084' : '8085'
+            sh "docker run -d --name MiniAssignment -p ${port}:8080 aayushmalviya/calculator-app:${env.BUILD_ID}"
         }
-        
-        stage('Run the container') {
-            steps {
-                script {
-                    def docker_container = sh(returnStdout: true, script: 'docker ps -a -f name="MiniAssignment" -q').trim()
-                    
-                    if (docker_container) {
-                        sh "docker stop ${docker_container}"
-                        sh "docker rm --force ${docker_container}"
-                    }
-                    
-                    def port = params.Environment == 'Dev' ? '8084' : '8085'
-                    sh "docker run -d --name MiniAssignment -p ${port}:8080 aayushmalviya/calculator-app:${env.BUILD_ID}"
-                }
-            }
-        }
-
+    }
+}
         stage('Email Notification') {
-            steps {
-                emailext body: 'Deployment completed successfully.',
-                         recipientProviders: [[$class: 'CulpritsRecipientProvider']],
-                         subject: 'Deployment Status',
-                         to: 'aayush.malviya@nagarro.com' // Replace with the recipient's email address
-            }
-        }
+    steps {
+        emailext body: 'Deployment completed successfully.',
+                 recipientProviders: [[$class: 'CulpritsRecipientProvider']],
+                 subject: 'Deployment Status',
+                 to: 'aayushmalviya202@gmail.com' // Replace with the recipient's email address
+    }
+}
+
+//         stage('Push Docker Image') {
+//     steps {
+//         script {
+//             // Push the Docker image to Docker Hub
+//             docker.withRegistry('https://registry.hub.docker.com', '97c36c51-b00f-4bd1-911b-3143b0f3b00d') {
+//                 docker.image("aayushmalviya/calculator-app:${env.BUILD_ID}").push()
+//             }
+//         }
+//     }
+// }
+    
+
+
+        
+        
     }
 }
