@@ -72,7 +72,7 @@ parameters {
         }
          stage('Push Docker Image') {
              when{
-                 branch 'Prod'
+                 branch 'Dev'
              }
     steps {
         script {
