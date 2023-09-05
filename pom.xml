@@ -72,7 +72,10 @@
                     <argLine>--enable-preview</argLine>
                 </configuration>
             </plugin>
-            
+               <plugin>
+<artifactId>maven-war-plugin</artifactId>
+<version>3.2.2</version>
+</plugin>
             <!-- JaCoCo Maven Plugin -->
             <plugin>
             <groupId>org.jacoco</groupId>
