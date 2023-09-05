@@ -33,20 +33,7 @@ parameters {
         }
        
 
-        stage('Jacoco Report') {
-            steps {
-                // Make sure to navigate to the workspace directory
-                dir('/var/lib/jenkins/workspace/') {
-                    sh "mvn jacoco:report"
-                }
-            }
-            post {
-                always {
-                    jacoco(execPattern: 'target/jacoco.exec')
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'target/site/jacoco', reportFiles: 'index.html', reportName: 'JaCoCo Code Coverage Report'])
-                }
-            }
-        }
+    
 
         stage('Sonar Analysis') {
             steps {
