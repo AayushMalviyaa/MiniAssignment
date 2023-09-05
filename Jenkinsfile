@@ -15,11 +15,7 @@ parameters {
     }
     //
     stages {
-        stage("Workspace Cleanup") {
-    steps {
-        cleanWs()
-    }
-}
+       
 
         stage("Maven Build") {
             steps {
@@ -91,6 +87,10 @@ parameters {
                  recipientProviders: [[$class: 'CulpritsRecipientProvider']],
                  subject: 'Deployment Status',
                  to: 'aayushmalviya202@gmail.com' // Replace with the recipient's email address
+    }
+            stage("Workspace Cleanup") {
+    steps {
+        cleanWs()
     }
 }
 
