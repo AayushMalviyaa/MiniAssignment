@@ -39,6 +39,7 @@ parameters {
                 }
             }
         }
+        
          stage("Pushing Artifacts"){
             steps{
                 rtUpload (
