@@ -47,7 +47,6 @@ parameters {
                 }
             }
         }
-}
 
         stage('Sonar Analysis') {
             steps {
