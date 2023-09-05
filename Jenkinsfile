@@ -30,6 +30,7 @@ parameters {
                     junit 'target/surefire-reports/*.xml'
                 }
             }
+       }
        
  
     
