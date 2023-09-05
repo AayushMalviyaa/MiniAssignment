@@ -31,6 +31,11 @@ parameters {
                 }
             }
        }
+        stage('JaCoCo Coverage Report') {
+            steps {
+                sh "mvn jacoco:report"
+            }
+        }
      
 
        
