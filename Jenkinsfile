@@ -31,18 +31,7 @@ parameters {
                 }
             }
        }
-        stage('Test2') {
-    steps {
-        sh "mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent test"
-    }
-    post {
-        success {
-            junit 'target/surefire-reports/*.xml'
-            // Generate JaCoCo code coverage report
-            sh "mvn org.jacoco:jacoco-maven-plugin:report"
-        }
-    }
-}
+     
 
        
  
