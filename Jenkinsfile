@@ -71,14 +71,18 @@ parameters {
                 )
             }
         }
-         stage('Build Docker Image') {
-            steps {
-                script {
-                    // Build the Docker image
-                    docker.build("aayushmalviya/calculator-app:${env.BUILD_ID}", "-f Dockerfile .")
-                }
-            }
+       stage('Build Docker Image') {
+    when {
+        expression { fileExists("target/ROOT.war") }
+    }
+    steps {
+        script {
+            // Build the Docker image
+            docker.build("aayushmalviya/calculator-app:${env.BUILD_ID}", "-f Dockerfile .")
         }
+    }
+}
+
        
      
          stage('Run the container') {
