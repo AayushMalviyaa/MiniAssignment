@@ -15,6 +15,12 @@ parameters {
     }
     //
     stages {
+        stage("Workspace Cleanup") {
+    steps {
+        cleanWs()
+    }
+}
+
         stage("Maven Build") {
             steps {
                 sh "mvn -f pom.xml clean install"
