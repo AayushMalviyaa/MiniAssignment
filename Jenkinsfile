@@ -34,7 +34,7 @@ parameters {
         
         stage('SonarQube analysis') {
         steps{
-            withSonarQubeEnv('server-sonar') {
+            withSonarQubeEnv('sonarqube-9.4') {
                 sh "mvn -f /pom.xml clean install sonar:sonar"
             }
         }   
