@@ -40,7 +40,7 @@ parameters {
     post {
         always {
             jacoco(execPattern: 'target/jacoco.exec')
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'target/site/jacoco', reportFiles: 'index.html', reportName: 'JaCoCo Code Coverage Report'])
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'target/, reportFiles: 'index.html', reportName: 'JaCoCo Code Coverage Report'])
         }
     }
 }
