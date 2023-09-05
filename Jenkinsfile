@@ -31,6 +31,14 @@ parameters {
                 }
             }
         }
+        stage('Prepare HTML Report Directory') {
+    steps {
+        script {
+            sh 'mkdir -p /var/lib/jenkins/workspace/com.nagarro.Pipeline.MiniPipeline.AayushMalviya/target/site/jacoco'
+        }
+    }
+}
+
         stage('Jacoco Report') {
     steps {
         sh "mvn jacoco:report"
