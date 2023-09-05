@@ -99,6 +99,7 @@
 
 
         </plugins>
+</build>
  <plugins>
         <plugin>
             <groupId>org.jacoco</groupId>
