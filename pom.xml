@@ -74,13 +74,18 @@
             </plugin>
             
             <!-- JaCoCo Maven Plugin -->
-            <plugin>
+             <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>your_version_here</version>
+            <version>0.8.10</version> <!-- Use the latest version or a specific version that works for your project -->
             <executions>
                 <execution>
-                    <id>jacoco-site</id>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>report</id>
                     <phase>prepare-package</phase>
                     <goals>
                         <goal>report</goal>
@@ -88,6 +93,7 @@
                 </execution>
             </executions>
         </plugin>
+
         </plugins>
     </build>
 </project>
