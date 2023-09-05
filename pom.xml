@@ -16,6 +16,16 @@
 
     <!-- Dependencies -->
     <dependencies>
+             <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>5.3.10</version> <!-- Use the appropriate version -->
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>5.3.10</version> <!-- Use the appropriate version -->
+    </dependency>
         <!-- Add your dependencies here -->
         <!-- Example: -->
         <!--<dependency>
