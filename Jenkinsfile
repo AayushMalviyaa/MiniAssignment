@@ -89,6 +89,21 @@ parameters {
                  to: 'aayushmalviya202@gmail.com' // Replace with the recipient's email address
     }
         }
+        stage('Check JaCoCo Report') {
+    steps {
+        script {
+            def workspace = pwd()
+            def jacocoSiteDir = "${workspace}/target/site"
+
+            if (fileExists(jacocoSiteDir)) {
+                echo "JaCoCo reports are available in ${jacocoSiteDir}"
+            } else {
+                error "JaCoCo reports not found in ${jacocoSiteDir}"
+            }
+        }
+    }
+}
+
             stage("Workspace Cleanup") {
     steps {
         cleanWs()
