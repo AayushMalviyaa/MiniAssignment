@@ -31,7 +31,18 @@ parameters {
                 }
             }
         }
-        
+        stage('Jacoco Report') {
+    steps {
+        sh "mvn jacoco:report"
+    }
+    post {
+        always {
+            jacoco(execPattern: 'target/jacoco.exec')
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'target/site/jacoco', reportFiles: 'index.html', reportName: 'JaCoCo Code Coverage Report'])
+        }
+    }
+}
+
         stage('Sonar Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube-9.4') {
