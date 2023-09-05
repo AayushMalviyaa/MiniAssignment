@@ -74,10 +74,10 @@
             </plugin>
             
             <!-- JaCoCo Maven Plugin -->
-             <plugin>
+            <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.10</version> <!-- Use the latest version or a specific version that works for your project -->
+            <version>0.8.10</version>
             <executions>
                 <execution>
                     <goals>
