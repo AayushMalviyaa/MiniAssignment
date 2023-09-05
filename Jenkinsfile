@@ -32,12 +32,7 @@ parameters {
             }
         }
        
- stage('Jacoco Report') {
-            steps {
-                // Generate Jacoco coverage reports
-                sh 'mvn jacoco:report'
-            }
-        }
+ 
     
 
         stage('Sonar Analysis') {
