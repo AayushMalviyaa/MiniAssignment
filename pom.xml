@@ -21,6 +21,9 @@
         <sonar.tests>src/test</sonar.tests>
         <sonar.java.binaries>target/classes</sonar.java.binaries>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+             <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+  <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+  <sonar.language>java</sonar.language>
     </properties>
     
     <dependencies>
