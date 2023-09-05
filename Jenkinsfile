@@ -36,7 +36,7 @@ parameters {
         stage('Jacoco Report') {
             steps {
                 // Make sure to navigate to the workspace directory
-                dir('/var/lib/jenkins/workspace/com.nagarro.Pipeline.MiniPipeline.AayushMalviya') {
+                dir('/var/lib/jenkins/workspace/') {
                     sh "mvn jacoco:report"
                 }
             }
