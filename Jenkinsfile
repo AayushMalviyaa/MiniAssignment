@@ -88,6 +88,7 @@ parameters {
                  subject: 'Deployment Status',
                  to: 'aayushmalviya202@gmail.com' // Replace with the recipient's email address
     }
+        }
             stage("Workspace Cleanup") {
     steps {
         cleanWs()
