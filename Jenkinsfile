@@ -1,8 +1,6 @@
 pipeline {
     agent any
- environment {
-        DOCKER_HUB_CREDENTIALS = credentials('97c36c51-b00f-4bd1-911b-3143b0f3b00d')
-    }
+ 
     tools {
         maven "maven.3.2.5"
     }
@@ -15,6 +13,33 @@ parameters {
     }
     //
     stages {
+         stage('Code checkout according to environment') {    
+             steps
+             {       
+              script
+                 {           
+                     if(params.Environment=='Dev')
+                     {
+                         checkout scmGit(branches: [[name: '*/Dev']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'MiniAssignment']]]], userRemoteConfigs: [[credentialsId: '9697fc83-78b5-4285-a54d-5ff22adce8e1', url: 'https://github.com/AayushMalviyaa/MiniAssignment.git']])
+                     }
+                     else if(params.Environment=='Prod')
+                     {
+                         checkout scmGit(branches: [[name: '*/Prod']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'MiniAssignment']]]], userRemoteConfigs: [[credentialsId: '9697fc83-78b5-4285-a54d-5ff22adce8e1', url: 'https://github.com/AayushMalviyaa/MiniAssignment.git']])
+                     }
+                     else 
+                     {
+                         error('Invalid choice')
+                     }
+                     
+
+                 }
+             }
+         }
+
+
+
+
+                         
         stage("Maven Build") {
             steps {
                 sh "mvn -f pom.xml clean install"
