@@ -20,11 +20,11 @@ parameters {
                  {           
                      if(params.Environment=='Dev')
                      {
-                         checkout scmGit(branches: [[name: '*/Dev']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'MiniAssignment']]]], userRemoteConfigs: [[credentialsId: '9697fc83-78b5-4285-a54d-5ff22adce8e1', url: 'https://github.com/AayushMalviyaa/MiniAssignment.git']])
+                        checkout scmGit(branches: [[name: '*/Dev']], extensions: [], userRemoteConfigs: [[credentialsId: '9697fc83-78b5-4285-a54d-5ff22adce8e1', url: 'https://github.com/AayushMalviyaa/MiniAssignment.git']])
                      }
                      else if(params.Environment=='Prod')
                      {
-                         checkout scmGit(branches: [[name: '*/Prod']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'MiniAssignment']]]], userRemoteConfigs: [[credentialsId: '9697fc83-78b5-4285-a54d-5ff22adce8e1', url: 'https://github.com/AayushMalviyaa/MiniAssignment.git']])
+                         checkout scmGit(branches: [[name: '*/Prod']], extensions: [], userRemoteConfigs: [[credentialsId: '9697fc83-78b5-4285-a54d-5ff22adce8e1', url: 'https://github.com/AayushMalviyaa/MiniAssignment.git']])
                      }
                      else 
                      {
