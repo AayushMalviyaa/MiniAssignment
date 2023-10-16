@@ -46,7 +46,7 @@ parameters {
                 spec: '''{
                 "files": [
                     {
-                    "pattern": "*.jar",
+                    "pattern": "*.war",
                     "target": "Main/"
                     }
                 ]
