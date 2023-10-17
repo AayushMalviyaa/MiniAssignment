@@ -67,6 +67,7 @@ stage("Deploy to Tomcat") {
                     sh "curl --upload-file ${warFileInWorkspace} '$tomcatUrl/manager/text/deploy?path=/app&update=true' -u tomcat:password"
                 }
             }
+}
         stage('Email Notification') {
     steps {
         emailext body: 'Deployment completed successfully.',
