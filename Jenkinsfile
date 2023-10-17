@@ -54,17 +54,42 @@ parameters {
                 )
             }
         }
-stage("Deploy to Tomcat") {
-            steps {
-                script {
-                    def warFileInWorkspace = "/var/lib/jenkins/workspace/com.nagarro.Pipeline.MiniPipeline.AayushMalviya/target/ROOT.war"
-                    def tomcatUrl = params.Environment == 'Dev' ? "http://192.168.56.101:8081/" : "http://192.168.56.101:9090/"
-
- 
-
-                    echo "Deploying $warFileInWorkspace to Tomcat at $tomcatUrl"
-
-                    sh "curl --upload-file ${warFileInWorkspace} '$tomcatUrl/manager/text/deploy?path=/app&update=true' -u tomcat:password"
+stage('Tomcat Deployment'){
+            steps{
+                script{
+                    if(params.Environment == 'Dev'){
+                        def tomcatStatus = sh(returnStdout: true, script: 'netstat -tuln | grep 8083 || true')
+                        if(tomcatStatus)
+                            {
+                                echo "Tomcat is running. Stopping Tomcat...."
+                                sh "sh /root/apache-tomcat-7.0.109/bin/catalina.sh stop"
+                    }
+                    else{
+                        echo "Tomcat not running, Starting one...."
+                    }
+                    sh 'sudo sed -i "s/8083/8082/" /root/apache-tomcat-7.0.109/conf/server.xml'
+                    sh 'sudo rm -r /root/apache-tomcat-7.0.109/webapps/*'
+                    sh 'sudo cp calculatorSpring/target/calculatorSpring.war /root/apache-tomcat-7.0.109/webapps/ROOT.war'
+                    sh 'sudo sh /root/apache-tomcat-7.0.109/bin/catalina.sh start'
+                    }
+                    else if(params.Environment == 'Prod'){
+                        def tomcatStatus = sh(returnStdout: true, script: 'netstat -tuln | grep 8082 || true')
+                        if(tomcatStatus)
+                            {
+                                echo "Tomcat is running. Stopping Tomcat...."
+                                sh "sh /root/apache-tomcat-7.0.109/bin/catalina.sh stop"
+                            }
+                        else{
+                                echo "Tomcat not running, Starting one...."
+                        }
+                    sh 'sudo sed -i "s/8082/8083/" /root/apache-tomcat-7.0.109/conf/server.xml'
+                    sh 'sudo rm -r /root/apache-tomcat-7.0.109/webapps/*'
+                    sh 'sudo cp calculatorSpring/target/calculatorSpring.war /root/apache-tomcat-7.0.109/webapps/ROOT.war'
+                    sh 'sudo sh /root/apache-tomcat-7.0.109/bin/catalina.sh start'
+                    }
+                    else{
+                        error('Kindly lookup the code')
+                    }
                 }
             }
 }
