@@ -57,7 +57,7 @@ parameters {
 stage("Deploy to Tomcat") {
             steps {
                 script {
-                    def warFileInWorkspace = "/var/lib/jenkins/workspace/com.nagarro.Calculator-pipeline/Calculator/target/Calculator.war"
+                    def warFileInWorkspace = "/var/lib/jenkins/workspace/com.nagarro.Calculator-pipeline/Calculator/target/ROOT.war"
                     def tomcatUrl = params.Environment == 'Dev' ? "http://192.168.56.101:8081/" : "http://192.168.56.101:9090/"
 
  
