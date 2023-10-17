@@ -54,31 +54,19 @@ parameters {
                 )
             }
         }
-         stage('Build Docker Image') {
+stage("Deploy to Tomcat") {
             steps {
                 script {
-                    // Build the Docker image
-                    docker.build("aayushmalviya/calculator-app:${env.BUILD_ID}", "-f Dockerfile .")
+                    def warFileInWorkspace = "/var/lib/jenkins/workspace/com.nagarro.Calculator-pipeline/Calculator/target/Calculator.war"
+                    def tomcatUrl = params.Environment == 'Dev' ? "http://192.168.56.101:8081/" : "http://192.168.56.101:9090/"
+
+ 
+
+                    echo "Deploying $warFileInWorkspace to Tomcat at $tomcatUrl"
+
+                    sh "curl --upload-file ${warFileInWorkspace} '$tomcatUrl/manager/text/deploy?path=/app&update=true' -u tomcat:password"
                 }
             }
-        }
-       
-     
-         stage('Run the container') {
-    steps {
-        script {
-            def docker_container = sh(returnStdout: true, script: 'docker ps -a -f name="MiniAssignment" -q').trim()
-            
-            if (docker_container) {
-                sh "docker stop ${docker_container}"
-                sh "docker rm --force ${docker_container}"
-            }
-            
-            def port = params.Environment == 'Dev' ? '8084' : '8085'
-            sh "docker run -d --name MiniAssignment -p ${port}:8080 aayushmalviya/calculator-app:${env.BUILD_ID}"
-        }
-    }
-}
         stage('Email Notification') {
     steps {
         emailext body: 'Deployment completed successfully.',
