@@ -13,23 +13,30 @@ parameters {
     }
     //   
     stages {
-        stage('Code checkout according to environment') {
-    steps {
-        script{
-            if(params.Environment=='Dev'){
-    checkout scmGit(branches: [[name: '*/Dev']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'Calculator']]]], userRemoteConfigs: [[credentialsId: '9697fc83-78b5-4285-a54d-5ff22adce8e1', url: 'https://github.com/AayushMalviyaa/MiniAssignment.git']])
-            }
-            
-            else if(params.Environment=='Prod'){
-                checkout scmGit(branches: [[name: '*/Prod']], extensions: [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: [[path: 'Calculator']]]], userRemoteConfigs: [[credentialsId: '9697fc83-78b5-4285-a54d-5ff22adce8e1', url: 'https://github.com/AayushMalviyaa/MiniAssignment.git']])
-            }
+         stage('Code checkout according to environment') {    
+             steps
+             {       
+              script
+                 {           
+                     if(params.Environment=='Dev')
+                     {
+                        checkout scmGit(branches: [[name: '*/Dev']], extensions: [], userRemoteConfigs: [[credentialsId: '9697fc83-78b5-4285-a54d-5ff22adce8e1', url: 'https://github.com/AayushMalviyaa/MiniAssignment.git']])
+                     }
+                     else if(params.Environment=='Prod')
+                     {
+                         checkout scmGit(branches: [[name: '*/Prod']], extensions: [], userRemoteConfigs: [[credentialsId: '9697fc83-78b5-4285-a54d-5ff22adce8e1', url: 'https://github.com/AayushMalviyaa/MiniAssignment.git']])
+                     }
+                     else 
+                     {
+                         error('Invalid choice')
+                     }
 
-            else{
-                error('Invalid choice')
-            }
-        } 
-        }
-    }
+
+                 }
+             }
+         }
+
+
 
 
         stage("Maven Build") {
